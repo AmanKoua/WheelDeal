@@ -1,10 +1,12 @@
 package com.akoua.WheelDeal.User;
 
+import com.akoua.WheelDeal.Auth.SignupRequestBody;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 
@@ -29,14 +31,29 @@ public class User implements UserDetails {
     public String middleName;
     public String lastName;
     public int age;
-    public char gender;
+    public String gender;
     public long cityId;
-    public int profileCreationStatus;
     public String phoneNumber;
     public String email;
     public String password;
     public int dealCount;
     public float avgRating;
+
+    public User(SignupRequestBody request, long cityId, String passwordHash){
+
+        this.firstName = request.firstName;
+        this.middleName = request.middleName;
+        this.lastName = request.lastName;
+        this.age = request.age;
+        this.gender = request.gender;
+        this.cityId = cityId;
+        this.phoneNumber = request.phoneNumber;
+        this.email = request.email;
+        this.password = passwordHash;
+        this.dealCount = 0;
+        this.avgRating = 0.0F;
+
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

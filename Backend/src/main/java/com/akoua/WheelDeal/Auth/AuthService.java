@@ -46,6 +46,8 @@ public class AuthService {
         return response;
     }
 
-
+    public String hashPassword(String password){
+        return passwordEncoder.encode(password);
+    }
 
 }
