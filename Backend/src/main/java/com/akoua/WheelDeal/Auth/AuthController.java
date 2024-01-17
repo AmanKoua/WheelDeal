@@ -30,9 +30,33 @@ public class AuthController {
     @PostMapping
     @RequestMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequestBody login){
-        System.out.println(login.email);
-        System.out.println(login.password);
-        return ResponseEntity.ok(authService.authenticate(login));
+
+        LoginResponse response = new LoginResponse();
+        String token;
+        Optional<User> user;
+
+        if(!login.areFieldsValid()){
+            response.message = "Email or password fields are null / empty!";
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        user = userRepository.findUserByEmail(login.email);
+
+        if(user.isEmpty()){
+            response.message = "No user found for provided email!";
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        token = authService.authenticate(user.get(), login.password);
+
+        if(token == null){
+            response.message = "Invalid password!";
+            return ResponseEntity.status(401).body(response);
+        }
+
+        response.message = "Login Successful!";
+        response.token = token;
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

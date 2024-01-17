@@ -22,28 +22,15 @@ public class AuthService {
         this.jwtService = j;
     }
 
-    public LoginResponse authenticate(LoginRequestBody request){
-        Optional<User> user = userRepository.findUserByEmail(request.email);
-
-        if(user.isEmpty()){
-            System.out.println("--- User not found when logging in! ---");
-            return null;
-        }
-
-        boolean isCorrectPassword = passwordEncoder.matches(request.password, user.get().getPassword());
+    public String authenticate(User user, String passwordRaw){
+        boolean isCorrectPassword = passwordEncoder.matches(passwordRaw, user.password);
 
         if(!isCorrectPassword){
             System.out.println("--- Incorrect password when logging in! ---");
             return null;
         }
 
-        var jwtToken = jwtService.generateToken(user.get());
-
-        LoginResponse response = new LoginResponse();
-        response.token = jwtToken;
-        response.message = "Login successful!";
-
-        return response;
+        return jwtService.generateToken(user);
     }
 
     public String hashPassword(String password){

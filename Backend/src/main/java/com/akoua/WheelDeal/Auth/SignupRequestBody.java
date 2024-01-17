@@ -46,6 +46,8 @@ public class SignupRequestBody {
             phoneNumber.length() != 10 ||
             email == null ||
             email.isEmpty() ||
+            !email.contains("@") ||
+            !email.contains(".") ||
             password == null ||
             password.isEmpty()
         )
