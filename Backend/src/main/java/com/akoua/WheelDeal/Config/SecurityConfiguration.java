@@ -2,17 +2,23 @@ package com.akoua.WheelDeal.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    SecurityConfiguration(){
+    private final JWTAuthFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;
 
+    SecurityConfiguration(JWTAuthFilter j, AuthenticationProvider a){
+        this.jwtAuthFilter = j;
+        this.authenticationProvider = a;
     }
 
     @Bean
@@ -24,13 +30,16 @@ public class SecurityConfiguration {
         .cors()
         .and()
         .authorizeHttpRequests()
-        .requestMatchers("/auth/**")
-        .permitAll()
+        .requestMatchers("/auth/**").permitAll()
+        .requestMatchers("/*").authenticated()
         .anyRequest()
         .authenticated()
         .and()
         .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authenticationProvider(authenticationProvider)
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 
