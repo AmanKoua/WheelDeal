@@ -108,7 +108,7 @@ public class TransactionController {
                 true,
                 owner.get().avgRating,
                 swapper.get().avgRating
-                );
+        );
 
         transactionRepository.save(transaction);
 
