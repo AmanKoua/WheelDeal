@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +50,19 @@ public class UserController {
 
         return null; // do not need to handle this case, because filter will reject unauthorized requests automatically.
 
+    }
+
+    @GetMapping
+    @RequestMapping("")
+    public ResponseEntity<Object> getUserById(@RequestParam("id") Long id){
+        Optional<User> user = userRepository.findById(id);
+
+        if(user.isEmpty()){
+            return ResponseEntity.status(404).body(null);
+        }
+
+        ProfileSlice slice = new ProfileSlice(user.get());
+        return ResponseEntity.ok(slice);
     }
 
 }

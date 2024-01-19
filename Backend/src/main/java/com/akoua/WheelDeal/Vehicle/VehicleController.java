@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +53,20 @@ public class VehicleController {
         }
 
         return null;
+    }
+
+    @GetMapping
+    @RequestMapping("/")
+    public ResponseEntity<Object> getVehicleById (@RequestParam("id") Long id){
+        Optional<Vehicle> vehicle = vehicleRepository.findById(id);
+        List<Vehicle> vehicleList = new ArrayList<Vehicle>();
+
+        if(vehicle.isEmpty()){
+            return null;
+        }
+
+        vehicleList.add(vehicle.get());
+        return ResponseEntity.ok(vehicleList);
     }
 
     @GetMapping
