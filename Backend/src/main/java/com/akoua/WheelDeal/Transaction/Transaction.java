@@ -24,7 +24,9 @@ public class Transaction {
             generator = "transaction_generator"
     )
     public Long id;
-    public Boolean areDetailsNew;
+//    public Boolean areDetailsNew;
+    public Boolean areDetailsNewForOwner;
+    public Boolean areDetailsNewForSwapper;
     public Integer status;
 
     @DateTimeFormat(pattern = "MM-dd-yyyy")
@@ -49,7 +51,9 @@ public class Transaction {
     public Float swapperRating;
 
     public Transaction(
-            Boolean areDetailsNew,
+//            Boolean areDetailsNew,
+            Boolean areDetailsNewForOwner,
+            Boolean areDetailsNewForSwapper,
             LocalDate dateCreated,
             LocalDate dateChanged,
             Boolean isPendingAmendmentAgreement,
@@ -66,7 +70,9 @@ public class Transaction {
             Float ownerRating,
             Float swapperRating
     ){
-        this.areDetailsNew = areDetailsNew;
+//        this.areDetailsNew = areDetailsNew;
+        this.areDetailsNewForOwner = areDetailsNewForOwner;
+        this.areDetailsNewForSwapper = areDetailsNewForSwapper;
         this.status = 1;
         this.dateCreated = dateCreated;
         this.dateChanged = dateChanged;

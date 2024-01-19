@@ -6,6 +6,7 @@ import com.akoua.WheelDeal.User.User;
 import com.akoua.WheelDeal.User.UserRepository;
 import com.akoua.WheelDeal.Vehicle.Vehicle;
 import com.akoua.WheelDeal.Vehicle.VehicleRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -13,10 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.HashMap;
+import java.util.*;
 
 @RestController
 @RequestMapping("/transaction")
@@ -94,6 +92,7 @@ public class TransactionController {
 
         Transaction transaction = new Transaction(
                 true,
+                true,
                 LocalDate.now(),
                 LocalDate.now(),
                 false,
@@ -123,16 +122,98 @@ public class TransactionController {
 
         Optional<User> user;
         List<Vehicle> userVehicles;
-        HashMap<Long, Integer> updateMap = new HashMap<Long, Integer>();
+        List<HashMap<Long,Integer>> updateList = new ArrayList<HashMap<Long,Integer>>();
+        HashMap<Long, Integer> incommingMap = new HashMap<Long, Integer>();
+        HashMap<Long, Integer> outgoingMap = new HashMap<Long, Integer>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         user = userRepository.findUserByEmail(auth.getName());
         userVehicles = vehicleRepository.getMyVehicles(user.get().email);
 
         for (Vehicle userVehicle : userVehicles) {
-            updateMap.put(userVehicle.id, transactionRepository.getUpdateCountByVehicle(userVehicle.id));
+            incommingMap.put(userVehicle.id, transactionRepository.getIncommingUpdateCountByVehicle(userVehicle.id));
+            outgoingMap.put(userVehicle.id, transactionRepository.getOutgoingUpdateCountByVehicle(userVehicle.id));
         }
 
-        return ResponseEntity.ok().body(updateMap);
+        updateList.add(incommingMap);
+        updateList.add(outgoingMap);
+
+        return ResponseEntity.ok().body(updateList);
+    }
+
+    @GetMapping
+    @RequestMapping("/vehicle")
+    public ResponseEntity<Object> getTransactionForVehicle(@RequestParam("id") Long id, @RequestParam("type") String type){
+
+        if(!type.equals("owner") && !type.equals("swapper")){
+            return ResponseEntity.badRequest().body("Invalid type! only \"owner\" and \"swapper\" are allowed!");
+        }
+
+        Optional<User> user;
+        Optional<Vehicle> vehicle;
+        List<Transaction> transactions;
+        boolean isOwner = type.equals("owner");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        user = userRepository.findUserByEmail(auth.getName());
+        vehicle = vehicleRepository.findById(id);
+
+        if(vehicle.isEmpty()){
+            return ResponseEntity.status(404).body("No vehicle found for provided id!");
+        }
+
+        if(!vehicle.get().ownerEmail.equals(user.get().email)){
+            return ResponseEntity.status(404).body("You are not authorized to view transaction(s) for the provided vehicle id!");
+        }
+
+        if(isOwner){
+            // View incomming transaction requests
+            transactions = transactionRepository.getTransactionForVehicleAsOwner(vehicle.get().id);
+        }
+        else{
+            // View outgoing transaction offers
+            transactions = transactionRepository.getTransactionForVehicleAsSwapper(vehicle.get().id);
+        }
+
+        return ResponseEntity.ok().body(transactions);
+    }
+
+    // TODO : Test!
+    @PostMapping()
+    @RequestMapping("/mark")
+    ResponseEntity<Object> markAsSeen(@RequestParam("id") Long id, @RequestParam("type") String type){
+
+        if(!type.equals("owner") && !type.equals("swapper")){
+            return ResponseEntity.badRequest().body("Invalid type! only \"owner\" and \"swapper\" are allowed!");
+        }
+
+        Optional<User> user;
+        boolean isOwner = type.equals("owner");
+        Optional<Vehicle> vehicle;
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        user = userRepository.findUserByEmail(authentication.getName());
+        vehicle = vehicleRepository.findById(id);
+
+        if(user.isEmpty()){
+            return null;
+        }
+
+        if(vehicle.isEmpty()){
+            return ResponseEntity.status(404).body("The requested vehicle was not found for the specified id");
+        }
+
+        if(!vehicle.get().ownerEmail.equals(user.get().email)){
+            return ResponseEntity.status(403).body("You are not authorized to mark this transaction as seen!");
+        }
+
+        if(isOwner){
+            transactionRepository.markTransactionSeenAsOwner(vehicle.get().id);
+        }
+        else{
+            transactionRepository.markTransactionSeenAsSwapper(vehicle.get().id);
+        }
+
+        return ResponseEntity.ok().body("Transaction successfully marked as seen!");
     }
 
 }
