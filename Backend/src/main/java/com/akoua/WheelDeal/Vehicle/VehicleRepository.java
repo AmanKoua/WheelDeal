@@ -11,6 +11,7 @@ import java.util.List;
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     @Query("SELECT v FROM Vehicle v WHERE " +
+            "(:category IS NULL OR v.category = :category) AND " +
             "(:make IS NULL OR v.make = :make) AND " +
             "(:model IS NULL OR v.model = :model) AND " +
             "(:year IS NULL OR v.year = :year) AND " +
@@ -19,6 +20,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             "(:maxPrice IS NULL OR v.defaultPrice <= :maxPrice)"
     )
     List<Vehicle> filterVehicles(
+            @Param("category") String category,
             @Param("make") String make,
             @Param("model") String model,
             @Param("year") Integer year,

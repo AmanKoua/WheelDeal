@@ -57,6 +57,7 @@ public class VehicleController {
     @GetMapping
     @RequestMapping("/filter")
     public ResponseEntity<Object> filterVehicles(
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) String make,
             @RequestParam(required = false) String model,
             @RequestParam(required = false) Integer year,
@@ -70,14 +71,6 @@ public class VehicleController {
         Vehicle vehicle;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        System.out.println("---- " + make);
-        System.out.println("---- " + model);
-        System.out.println("---- " + year);
-        System.out.println("---- " + cityName);
-        System.out.println("---- " + min);
-        System.out.println("---- " + max);
-
-
         List<City> cityList = cityRepository.getCityByName(cityName);
 
         if(cityList.isEmpty()){
@@ -86,7 +79,7 @@ public class VehicleController {
         }
 
         city = cityRepository.findById(cityList.get(0).id);
-        List<Vehicle> vehicles = vehicleRepository.filterVehicles(make,model,year,city.get().id,min,max);
+        List<Vehicle> vehicles = vehicleRepository.filterVehicles(category,make,model,year,city.get().id,min,max);
 
         return ResponseEntity.ok(vehicles);
     }
