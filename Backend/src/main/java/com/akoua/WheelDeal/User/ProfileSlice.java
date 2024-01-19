@@ -1,5 +1,4 @@
 package com.akoua.WheelDeal.User;
 
-public class Message {
-
+public class ProfileSlice {
 }

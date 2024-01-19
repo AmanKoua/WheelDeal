@@ -32,6 +32,7 @@ public class SecurityConfiguration {
         .authorizeHttpRequests()
         .requestMatchers("/auth/**").permitAll()
         .requestMatchers("/*").authenticated()
+        .requestMatchers("/vehicle/*").authenticated()
         .anyRequest()
         .authenticated()
         .and()
