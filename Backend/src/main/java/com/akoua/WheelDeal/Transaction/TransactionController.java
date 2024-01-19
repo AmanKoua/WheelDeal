@@ -6,16 +6,17 @@ import com.akoua.WheelDeal.User.User;
 import com.akoua.WheelDeal.User.UserRepository;
 import com.akoua.WheelDeal.Vehicle.Vehicle;
 import com.akoua.WheelDeal.Vehicle.VehicleRepository;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/transaction")
@@ -114,6 +115,24 @@ public class TransactionController {
 
         return ResponseEntity.ok("Transaction registered successfull!");
 
+    }
+
+    @GetMapping
+    @RequestMapping("/updates")
+    public ResponseEntity<Object> getNotificationCountByVehicle(){
+
+        Optional<User> user;
+        List<Vehicle> userVehicles;
+        HashMap<Long, Integer> updateMap = new HashMap<Long, Integer>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        user = userRepository.findUserByEmail(auth.getName());
+        userVehicles = vehicleRepository.getMyVehicles(user.get().email);
+
+        for (Vehicle userVehicle : userVehicles) {
+            updateMap.put(userVehicle.id, transactionRepository.getUpdateCountByVehicle(userVehicle.id));
+        }
+
+        return ResponseEntity.ok().body(updateMap);
     }
 
 }
