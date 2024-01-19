@@ -29,4 +29,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             @Param("maxPrice") Double maxPrice
     );
 
+    @Query("SELECT v FROM Vehicle v WHERE v.ownerEmail = :ownerEmail")
+    List <Vehicle> getMyVehicles(@Param("ownerEmail") String email);
+
 }

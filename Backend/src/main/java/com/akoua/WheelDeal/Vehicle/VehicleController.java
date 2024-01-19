@@ -56,6 +56,24 @@ public class VehicleController {
     }
 
     @GetMapping
+    @RequestMapping("/myvehicles")
+    public ResponseEntity<Object> getMyVehicles(){
+        Optional<User> user;
+        List<Vehicle> vehiclesList;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        user = userRepository.findUserByEmail(authentication.getName());
+
+        if(user.isEmpty()){
+            return ResponseEntity.status(404).body("invalid user when getting own vehicles!");
+        }
+
+        vehiclesList = vehicleRepository.getMyVehicles(user.get().email);
+
+        return ResponseEntity.ok().body(vehiclesList);
+    }
+
+    @GetMapping
     @RequestMapping("/")
     public ResponseEntity<Object> getVehicleById (@RequestParam("id") Long id){
         Optional<Vehicle> vehicle = vehicleRepository.findById(id);
