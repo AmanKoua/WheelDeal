@@ -54,8 +54,8 @@ public class UserController {
 
     @GetMapping
     @RequestMapping("")
-    public ResponseEntity<Object> getUserById(@RequestParam("id") Long id){
-        Optional<User> user = userRepository.findById(id);
+    public ResponseEntity<Object> getUserByEmail(@RequestParam("email") String email){
+        Optional<User> user = userRepository.findUserByEmail(email);
 
         if(user.isEmpty()){
             return ResponseEntity.status(404).body(null);
