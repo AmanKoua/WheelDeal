@@ -2,6 +2,7 @@ package com.akoua.WheelDeal.Vehicle;
 
 import com.akoua.WheelDeal.City.City;
 import com.akoua.WheelDeal.City.CityRepository;
+import com.akoua.WheelDeal.ResponseObjects.Message;
 import com.akoua.WheelDeal.User.User;
 import com.akoua.WheelDeal.User.UserRepository;
 import org.springframework.data.repository.query.Param;
@@ -39,7 +40,7 @@ public class VehicleController {
         if(!request.isValid()){
             request.printAllFields();
             message = "Request body has invalid / missing field(s)!";
-            return ResponseEntity.ok(message);
+            return ResponseEntity.ok(new Message(message));
         }
 
         if(authentication != null && authentication.isAuthenticated()){
@@ -49,7 +50,7 @@ public class VehicleController {
             vehicleRepository.save(vehicle);
 
             message = "Successfully registered new vehicle!";
-            return ResponseEntity.ok(message);
+            return ResponseEntity.ok(new Message(message));
         }
 
         return null;
@@ -65,7 +66,7 @@ public class VehicleController {
         user = userRepository.findUserByEmail(authentication.getName());
 
         if(user.isEmpty()){
-            return ResponseEntity.status(404).body("invalid user when getting own vehicles!");
+            return ResponseEntity.status(404).body(new Message("invalid user when getting own vehicles!"));
         }
 
         vehiclesList = vehicleRepository.getMyVehicles(user.get().email);
@@ -108,7 +109,7 @@ public class VehicleController {
 
         if(cityList.isEmpty()){
             message = "City " + cityName + " was not found!";
-            return ResponseEntity.badRequest().body(message);
+            return ResponseEntity.badRequest().body(new Message(message));
         }
 
         city = cityRepository.findById(cityList.get(0).id);

@@ -2,6 +2,7 @@ package com.akoua.WheelDeal.User;
 
 import com.akoua.WheelDeal.City.City;
 import com.akoua.WheelDeal.City.CityRepository;
+import com.akoua.WheelDeal.ResponseObjects.Message;
 import com.akoua.WheelDeal.Vehicle.PostVehicleRequestBody;
 import com.akoua.WheelDeal.Vehicle.Vehicle;
 import com.akoua.WheelDeal.Vehicle.VehicleRepository;
@@ -41,7 +42,7 @@ public class UserController {
 
             if(city.isEmpty()){
                 message = "Internal server error. City not found!";
-                return ResponseEntity.internalServerError().body(message);
+                return ResponseEntity.internalServerError().body(new Message(message));
             }
 
             SelfProfileSlice slice = new SelfProfileSlice(user, city.get().name);

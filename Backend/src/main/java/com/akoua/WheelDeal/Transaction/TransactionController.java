@@ -2,6 +2,7 @@ package com.akoua.WheelDeal.Transaction;
 
 import com.akoua.WheelDeal.City.City;
 import com.akoua.WheelDeal.City.CityRepository;
+import com.akoua.WheelDeal.ResponseObjects.Message;
 import com.akoua.WheelDeal.User.User;
 import com.akoua.WheelDeal.User.UserRepository;
 import com.akoua.WheelDeal.Vehicle.Vehicle;
@@ -37,7 +38,7 @@ public class TransactionController {
     public ResponseEntity<Object> createTransaction(@RequestBody TransactionPostRequest request){
 
         if(!request.areFieldsValid()){
-            return ResponseEntity.badRequest().body("Transaction post request field(s) are invalid!");
+            return ResponseEntity.badRequest().body(new Message("Transaction post request field(s) are invalid!"));
         }
 
         Optional<User> owner;
@@ -53,41 +54,41 @@ public class TransactionController {
         swapperVehicle = vehicleRepository.findById(request.swapperVehicleId);
 
         if(owner.isEmpty()){
-            return ResponseEntity.status(404).body("No user found for provided owner email!");
+            return ResponseEntity.status(404).body(new Message("No user found for provided owner email!"));
         }
 
         ownerCity = cityRepository.findById(owner.get().cityId);
 
         if(ownerCity.isEmpty()){
-            return ResponseEntity.status(500).body("Internal server error. Owner city does not exist!");
+            return ResponseEntity.status(500).body(new Message("Internal server error. Owner city does not exist!"));
         }
 
         if(swapper.isEmpty()){
-            return ResponseEntity.status(404).body("No user found for provided swapper email!");
+            return ResponseEntity.status(404).body(new Message("No user found for provided swapper email!"));
         }
 
         if(ownerVehicle.isEmpty()){
-            return ResponseEntity.status(404).body("No owner vehicle was found for provided id!");
+            return ResponseEntity.status(404).body(new Message("No owner vehicle was found for provided id!"));
         }
 
         if(!ownerVehicle.get().ownerEmail.equals(owner.get().email)){
-            return ResponseEntity.badRequest().body("Provided owner email is not the owner of the provided owner vehicle id!");
+            return ResponseEntity.badRequest().body(new Message("Provided owner email is not the owner of the provided owner vehicle id!"));
         }
 
         if(!ownerVehicle.get().isAvailable){
-            return ResponseEntity.status(403).body("Owner vehicle is not available!");
+            return ResponseEntity.status(403).body(new Message("Owner vehicle is not available!"));
         }
 
         if(swapperVehicle.isEmpty()){
-            return ResponseEntity.status(404).body("No swapper vehicle was found for provided id!");
+            return ResponseEntity.status(404).body(new Message("No swapper vehicle was found for provided id!"));
         }
 
         if(!swapperVehicle.get().ownerEmail.equals(swapper.get().email)){
-            return ResponseEntity.status(403).body("Swapper vehicle email and swapper email do not match!");
+            return ResponseEntity.status(403).body(new Message("Swapper vehicle email and swapper email do not match!"));
         }
 
         if(!swapperVehicle.get().isAvailable){
-            return ResponseEntity.status(403).body("Swapper vehicle is not available!");
+            return ResponseEntity.status(403).body(new Message("Swapper vehicle is not available!"));
         }
 
         Transaction transaction = new Transaction(
@@ -112,7 +113,7 @@ public class TransactionController {
 
         transactionRepository.save(transaction);
 
-        return ResponseEntity.ok("Transaction registered successfull!");
+        return ResponseEntity.ok(new Message("Transaction registered successfull!"));
 
     }
 
@@ -150,7 +151,7 @@ public class TransactionController {
     public ResponseEntity<Object> getTransactionForVehicle(@RequestParam("id") Long id, @RequestParam("type") String type){
 
         if(!type.equals("owner") && !type.equals("swapper")){
-            return ResponseEntity.badRequest().body("Invalid type! only \"owner\" and \"swapper\" are allowed!");
+            return ResponseEntity.badRequest().body(new Message("Invalid type! only \"owner\" and \"swapper\" are allowed!"));
         }
 
         Optional<User> user;
@@ -163,11 +164,11 @@ public class TransactionController {
         vehicle = vehicleRepository.findById(id);
 
         if(vehicle.isEmpty()){
-            return ResponseEntity.status(404).body("No vehicle found for provided id!");
+            return ResponseEntity.status(404).body(new Message("No vehicle found for provided id!"));
         }
 
         if(!vehicle.get().ownerEmail.equals(user.get().email)){
-            return ResponseEntity.status(404).body("You are not authorized to view transaction(s) for the provided vehicle id!");
+            return ResponseEntity.status(404).body(new Message("You are not authorized to view transaction(s) for the provided vehicle id!"));
         }
 
         if(isOwner){
@@ -187,7 +188,7 @@ public class TransactionController {
     ResponseEntity<Object> markAsSeen(@RequestParam("id") Long id, @RequestParam("type") String type){
 
         if(!type.equals("owner") && !type.equals("swapper")){
-            return ResponseEntity.badRequest().body("Invalid type! only \"owner\" and \"swapper\" are allowed!");
+            return ResponseEntity.badRequest().body(new Message("Invalid type! only \"owner\" and \"swapper\" are allowed!"));
         }
 
         Optional<User> user;
@@ -203,11 +204,11 @@ public class TransactionController {
         }
 
         if(vehicle.isEmpty()){
-            return ResponseEntity.status(404).body("The requested vehicle was not found for the specified id");
+            return ResponseEntity.status(404).body(new Message("The requested vehicle was not found for the specified id"));
         }
 
         if(!vehicle.get().ownerEmail.equals(user.get().email)){
-            return ResponseEntity.status(403).body("You are not authorized to mark this transaction as seen!");
+            return ResponseEntity.status(403).body(new Message("You are not authorized to mark this transaction as seen!"));
         }
 
         if(isOwner){
@@ -217,7 +218,7 @@ public class TransactionController {
             transactionRepository.markTransactionSeenAsSwapper(vehicle.get().id);
         }
 
-        return ResponseEntity.ok().body("Transaction successfully marked as seen!");
+        return ResponseEntity.ok().body(new Message("Transaction successfully marked as seen!"));
     }
 
     @PutMapping
@@ -225,7 +226,7 @@ public class TransactionController {
     public ResponseEntity<Object> acceptTransaction(@RequestParam("id") Long id, @RequestParam("rating") float rating){
 
         if(rating > 5 || rating < 0){
-            return ResponseEntity.badRequest().body("cannot have rating outside of range 0 to 5!");
+            return ResponseEntity.badRequest().body(new Message("cannot have rating outside of range 0 to 5!"));
         }
 
         Optional<User> user;
@@ -238,18 +239,18 @@ public class TransactionController {
         transaction = transactionRepository.findById(id);
 
         if(user.isEmpty()){
-            return ResponseEntity.status(404).body("Authenticated user not found!");
+            return ResponseEntity.status(404).body(new Message("Authenticated user not found!"));
         }
 
         if(transaction.isEmpty()){
-            return ResponseEntity.status(404).body("No transaction found for provided id!");
+            return ResponseEntity.status(404).body(new Message("No transaction found for provided id!"));
         }
 
         if(transaction.get().ownerEmail.equals(user.get().email)){
             isOwner = true;
 
             if(transaction.get().doesOwnerAgree){
-                return ResponseEntity.status(403).body("Cannot accept a transaction multiple times!");
+                return ResponseEntity.status(403).body(new Message("Cannot accept a transaction multiple times!"));
             }
 
             transactionRepository.acceptTransactionAsOwner(user.get().email, id);
@@ -258,13 +259,13 @@ public class TransactionController {
             isOwner = false;
 
             if(transaction.get().doesSwapperAgree){
-                return ResponseEntity.status(403).body("Cannot accept a transaction multiple times!");
+                return ResponseEntity.status(403).body(new Message("Cannot accept a transaction multiple times!"));
             }
 
             transactionRepository.acceptTransactionAsSwapper(user.get().email, id);
         }
         else{
-            return ResponseEntity.status(403).body("You are not authorized to accept this transaction!");
+            return ResponseEntity.status(403).body(new Message("You are not authorized to accept this transaction!"));
         }
 
         if(isOwner){
@@ -275,7 +276,7 @@ public class TransactionController {
         }
 
         if(other.isEmpty()){
-            return ResponseEntity.status(500).body("Internal server error! Other transaction user not found!");
+            return ResponseEntity.status(500).body(new Message("Internal server error! Other transaction user not found!"));
         }
 
         if(other.get().dealCount == 0){
@@ -291,10 +292,10 @@ public class TransactionController {
             vehicleRepository.deleteById(transaction.get().swapperVehicleId);
             transactionRepository.removeHangingTransactions(transaction.get().ownerEmail, transaction.get().ownerVehicleId);
             transactionRepository.removeHangingTransactions(transaction.get().swapperEmail, transaction.get().swapperVehicleId);
-            return ResponseEntity.ok().body("Transaction accepted successfully! Transaction closed!");
+            return ResponseEntity.ok().body(new Message("Transaction accepted successfully! Transaction closed!"));
         }
         else{
-            return ResponseEntity.ok().body("Transaction accepted successfully! Pending other user's approval");
+            return ResponseEntity.ok().body(new Message("Transaction accepted successfully! Pending other user's approval"));
         }
     }
 
@@ -310,20 +311,20 @@ public class TransactionController {
         transaction = transactionRepository.findById(id);
 
         if(user.isEmpty()){
-            return ResponseEntity.internalServerError().body("No user found for authenticated user!");
+            return ResponseEntity.internalServerError().body(new Message("No user found for authenticated user!"));
         }
 
         if(transaction.isEmpty()){
-            return ResponseEntity.status(404).body("No transaction found for provided id!");
+            return ResponseEntity.status(404).body(new Message("No transaction found for provided id!"));
         }
 
         if(!transaction.get().ownerEmail.equals(user.get().email)){
-            return ResponseEntity.status(403).body("You are not authorized to reject this transaction");
+            return ResponseEntity.status(403).body(new Message("You are not authorized to reject this transaction"));
         }
 
         transactionRepository.deleteTransaction(user.get().email, id);
 
-        return ResponseEntity.ok().body("Successfuly deleted transaction!");
+        return ResponseEntity.ok().body(new Message("Successfuly deleted transaction!"));
     }
 
 }
