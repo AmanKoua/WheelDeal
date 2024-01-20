@@ -221,4 +221,32 @@ public class TransactionController {
         return ResponseEntity.ok().body("Transaction successfully marked as seen!");
     }
 
+    @PutMapping
+    @RequestMapping("/reject")
+    public ResponseEntity<Object> handleTransaction(@RequestParam("id") Long id){
+
+        Optional<User> user;
+        Optional<Transaction> transaction;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        user = userRepository.findUserByEmail(authentication.getName());
+        transaction = transactionRepository.findById(id);
+
+        if(user.isEmpty()){
+            return ResponseEntity.internalServerError().body("No user found for authenticated user!");
+        }
+
+        if(transaction.isEmpty()){
+            return ResponseEntity.status(404).body("No transaction found for provided id!");
+        }
+
+        if(!transaction.get().ownerEmail.equals(user.get().email)){
+            return ResponseEntity.status(403).body("You are not authorized to reject this transaction");
+        }
+
+        transactionRepository.deleteTransaction(user.get().email, id);
+
+        return ResponseEntity.ok().body("Successfuly deleted transaction!");
+    }
+
 }

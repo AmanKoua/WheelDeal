@@ -34,4 +34,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Modifying
     public void markTransactionSeenAsSwapper(@Param("swapperVehicleId") Long swapperVehicleId);
 
+    @Query("DELETE Transaction t WHERE t.ownerEmail = :ownerEmail AND t.id = :id")
+    @Modifying
+    public void deleteTransaction (@Param("ownerEmail") String ownerEmail, @Param("id") Long id);
+
 }
