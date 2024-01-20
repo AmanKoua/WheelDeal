@@ -38,6 +38,7 @@ public class User implements UserDetails {
     public String password;
     public int dealCount;
     public float avgRating;
+    public float totalRating;
 
     public User(SignupRequestBody request, long cityId, String passwordHash){
 
@@ -52,6 +53,7 @@ public class User implements UserDetails {
         this.password = passwordHash;
         this.dealCount = 0;
         this.avgRating = 0.0F;
+        this.totalRating = 0;
 
     }
 

@@ -60,6 +60,7 @@ public class InitConfiguration {
             user1.password = authService.hashPassword("password");
             user1.dealCount = 0;
             user1.avgRating = 0f;
+            user1.totalRating = 0f;
 
             User user2 = new User();
             user2.firstName = "Susan";
@@ -72,6 +73,7 @@ public class InitConfiguration {
             user2.password = authService.hashPassword("password");
             user2.dealCount = 0;
             user2.avgRating = 0f;
+            user2.totalRating = 0f;
 
             userRepository.saveAll(List.of(user1, user2));
 
@@ -141,7 +143,7 @@ public class InitConfiguration {
             t1.ownerLocationOffer = city1.name;
             t1.swapperLocationOffer = city2.name;
             t1.doesOwnerAgree = false;
-            t1.doesSwapperAgree = true;
+            t1.doesSwapperAgree = false;
             t1.ownerRating = user1.avgRating;
             t1.swapperRating = user2.avgRating;
 
@@ -161,7 +163,7 @@ public class InitConfiguration {
             t2.ownerLocationOffer = city2.name;
             t2.swapperLocationOffer = city1.name;
             t2.doesOwnerAgree = false;
-            t2.doesSwapperAgree = true;
+            t2.doesSwapperAgree = false;
             t2.ownerRating = user2.avgRating;
             t2.swapperRating = user1.avgRating;
 

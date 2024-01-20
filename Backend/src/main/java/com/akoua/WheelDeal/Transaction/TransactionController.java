@@ -105,7 +105,7 @@ public class TransactionController {
                 ownerCity.get().name,
                 request.swapperLocationOffer,
                 false,
-                true,
+                false,
                 owner.get().avgRating,
                 swapper.get().avgRating
         );
@@ -247,10 +247,20 @@ public class TransactionController {
 
         if(transaction.get().ownerEmail.equals(user.get().email)){
             isOwner = true;
+
+            if(transaction.get().doesOwnerAgree){
+                return ResponseEntity.status(403).body("Cannot accept a transaction multiple times!");
+            }
+
             transactionRepository.acceptTransactionAsOwner(user.get().email, id);
         }
         else if(transaction.get().swapperEmail.equals(user.get().email)){
             isOwner = false;
+
+            if(transaction.get().doesSwapperAgree){
+                return ResponseEntity.status(403).body("Cannot accept a transaction multiple times!");
+            }
+
             transactionRepository.acceptTransactionAsSwapper(user.get().email, id);
         }
         else{
@@ -265,14 +275,15 @@ public class TransactionController {
         }
 
         if(other.isEmpty()){
-            return ResponseEntity.status(500).body("Internal server error!");
+            return ResponseEntity.status(500).body("Internal server error! Other transaction user not found!");
         }
 
         if(other.get().dealCount == 0){
-            userRepository.updateUserRating(rating, other.get().email);
+            userRepository.updateUserRating(rating, rating, other.get().email);
         }
         else{
-            userRepository.updateUserRating((other.get().avgRating + rating) / 2, other.get().email);
+            float avgRating = (other.get().totalRating + rating) / (other.get().dealCount + 1);
+            userRepository.updateUserRating(avgRating, rating, other.get().email);
         }
 
         if((isOwner && transaction.get().doesSwapperAgree) || (!isOwner && transaction.get().doesOwnerAgree)){
