@@ -122,9 +122,11 @@ public class TransactionController {
 
         Optional<User> user;
         List<Vehicle> userVehicles;
-        List<HashMap<Long,Integer>> updateList = new ArrayList<HashMap<Long,Integer>>();
+        List<HashMap<String,HashMap<Long, Integer>>> updateList = new ArrayList<HashMap<String,HashMap<Long, Integer>>>();
         HashMap<Long, Integer> incommingMap = new HashMap<Long, Integer>();
         HashMap<Long, Integer> outgoingMap = new HashMap<Long, Integer>();
+        HashMap<String,HashMap<Long, Integer>> incommingWrapper = new HashMap<String,HashMap<Long, Integer>>();
+        HashMap<String,HashMap<Long, Integer>> outgoingWrapper = new HashMap<String,HashMap<Long, Integer>>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         user = userRepository.findUserByEmail(auth.getName());
         userVehicles = vehicleRepository.getMyVehicles(user.get().email);
@@ -134,8 +136,11 @@ public class TransactionController {
             outgoingMap.put(userVehicle.id, transactionRepository.getOutgoingUpdateCountByVehicle(userVehicle.id));
         }
 
-        updateList.add(incommingMap);
-        updateList.add(outgoingMap);
+        incommingWrapper.put("Incomming", incommingMap);
+        outgoingWrapper.put("outgoing", outgoingMap);
+
+        updateList.add(incommingWrapper);
+        updateList.add(outgoingWrapper);
 
         return ResponseEntity.ok().body(updateList);
     }
