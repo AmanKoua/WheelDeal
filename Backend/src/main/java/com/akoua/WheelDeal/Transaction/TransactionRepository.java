@@ -38,4 +38,15 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Modifying
     public void deleteTransaction (@Param("ownerEmail") String ownerEmail, @Param("id") Long id);
 
+    @Query("DELETE Transaction t WHERE t.ownerEmail = :ownerEmail AND t.ownerVehicleId = :ownerVehicleId")
+    @Modifying
+    public void removeHangingTransactions(@Param("ownerEmail") String ownerEmail, @Param("ownerVehicleId") Long id);
+
+    @Query("UPDATE Transaction t SET t.doesOwnerAgree = TRUE where t.ownerEmail = :ownerEmail AND t.id = :id")
+    @Modifying
+    public void acceptTransactionAsOwner(@Param("ownerEmail") String ownerEmail, @Param("id") Long id);
+
+    @Query("UPDATE Transaction t SET t.doesSwapperAgree = TRUE where t.swapperEmail = :swapperEmail AND t.id = :id")
+    @Modifying
+    public void acceptTransactionAsSwapper(@Param("swapperEmail") String swapperEmail, @Param("id") Long id);
 }

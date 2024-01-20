@@ -182,7 +182,6 @@ public class TransactionController {
         return ResponseEntity.ok().body(transactions);
     }
 
-    // TODO : Test!
     @PutMapping()
     @RequestMapping("/mark")
     ResponseEntity<Object> markAsSeen(@RequestParam("id") Long id, @RequestParam("type") String type){
@@ -219,6 +218,73 @@ public class TransactionController {
         }
 
         return ResponseEntity.ok().body("Transaction successfully marked as seen!");
+    }
+
+    @PutMapping
+    @RequestMapping("/accept")
+    public ResponseEntity<Object> acceptTransaction(@RequestParam("id") Long id, @RequestParam("rating") float rating){
+
+        if(rating > 5 || rating < 0){
+            return ResponseEntity.badRequest().body("cannot have rating outside of range 0 to 5!");
+        }
+
+        Optional<User> user;
+        Optional<User> other;
+        Optional<Transaction> transaction;
+        boolean isOwner;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        user = userRepository.findUserByEmail(authentication.getName());
+        transaction = transactionRepository.findById(id);
+
+        if(user.isEmpty()){
+            return ResponseEntity.status(404).body("Authenticated user not found!");
+        }
+
+        if(transaction.isEmpty()){
+            return ResponseEntity.status(404).body("No transaction found for provided id!");
+        }
+
+        if(transaction.get().ownerEmail.equals(user.get().email)){
+            isOwner = true;
+            transactionRepository.acceptTransactionAsOwner(user.get().email, id);
+        }
+        else if(transaction.get().swapperEmail.equals(user.get().email)){
+            isOwner = false;
+            transactionRepository.acceptTransactionAsSwapper(user.get().email, id);
+        }
+        else{
+            return ResponseEntity.status(403).body("You are not authorized to accept this transaction!");
+        }
+
+        if(isOwner){
+            other = userRepository.findUserByEmail(transaction.get().swapperEmail);
+        }
+        else{
+            other = userRepository.findUserByEmail(transaction.get().ownerEmail);
+        }
+
+        if(other.isEmpty()){
+            return ResponseEntity.status(500).body("Internal server error!");
+        }
+
+        if(other.get().dealCount == 0){
+            userRepository.updateUserRating(rating, other.get().email);
+        }
+        else{
+            userRepository.updateUserRating((other.get().avgRating + rating) / 2, other.get().email);
+        }
+
+        if((isOwner && transaction.get().doesSwapperAgree) || (!isOwner && transaction.get().doesOwnerAgree)){
+            vehicleRepository.deleteById(transaction.get().ownerVehicleId);
+            vehicleRepository.deleteById(transaction.get().swapperVehicleId);
+            transactionRepository.removeHangingTransactions(transaction.get().ownerEmail, transaction.get().ownerVehicleId);
+            transactionRepository.removeHangingTransactions(transaction.get().swapperEmail, transaction.get().swapperVehicleId);
+            return ResponseEntity.ok().body("Transaction accepted successfully! Transaction closed!");
+        }
+        else{
+            return ResponseEntity.ok().body("Transaction accepted successfully! Pending other user's approval");
+        }
     }
 
     @PutMapping
