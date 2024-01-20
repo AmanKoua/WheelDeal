@@ -183,7 +183,7 @@ public class TransactionController {
     }
 
     // TODO : Test!
-    @PostMapping()
+    @PutMapping()
     @RequestMapping("/mark")
     ResponseEntity<Object> markAsSeen(@RequestParam("id") Long id, @RequestParam("type") String type){
 

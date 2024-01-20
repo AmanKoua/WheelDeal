@@ -37,7 +37,7 @@ public class InitConfiguration {
 
     @Bean
     CommandLineRunner relationsInitializer(CityRepository cityRepository){
-        // ignore default constructor errors. Lombok will create at runtime
+        // ignore default constructor errors. Lombok will create them at runtime
         return args -> {
 
             City city1 = new City();
