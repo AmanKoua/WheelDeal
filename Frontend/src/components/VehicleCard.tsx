@@ -60,7 +60,7 @@ const VehicleCard = ({ vehicle, citiesList }: Props) => {
   console.log(vehicle);
 
   return (
-    <div className="shadow-md hover:shadow-xl p-1 w-4/6 mt-4 ml-auto mr-auto">
+    <div className="bg-blue-100 shadow-md hover:shadow-xl p-1 w-4/6 mt-8 ml-auto mr-auto">
       <div className="border-b border-gray-200 w-6/6 h-8 ml-auto mr-auto flex flex-row">
         {ownerDetails && (
           <div className="w-1/3 h-max mt-auto mb-auto text-center">
@@ -112,7 +112,7 @@ const VehicleCard = ({ vehicle, citiesList }: Props) => {
         )}
         {vehicle && (
           <div className=" w-1/2 h-max mt-auto mb-auto text-center">
-            <strong>Price :</strong> {processPrice(vehicle.defaultPrice)}
+            <strong>Price :</strong> ${processPrice(vehicle.defaultPrice)}
           </div>
         )}
         {vehicle && (

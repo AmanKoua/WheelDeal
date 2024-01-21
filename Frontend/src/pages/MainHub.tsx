@@ -240,7 +240,7 @@ const MainHub = () => {
         </div>
       </div>
       <div
-        className="bg-blue-800 text-blue-100 border border-gray-300 w-max p-2 h-max ml-auto mr-auto mt-4 text-center rounded-sm shadow-md hover:shadow-lg"
+        className="bg-blue-800 text-blue-100 border border-gray-300 w-max p-2 h-max ml-auto mr-auto mt-12 text-center rounded-sm shadow-md hover:shadow-lg"
         onClick={() => {
           search();
         }}
