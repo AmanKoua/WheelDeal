@@ -1,8 +1,10 @@
 import React from "react";
 
+import Notification from "../components/Notification";
+
 const Login = () => {
   return (
-    <div className="flex" style={{ height: "100vh" }}>
+    <div className="flex flex-col" style={{ height: "100vh" }}>
       <div className="bg-gray-200 h-2/4 w-1/4 pb-4 pt-4 rounded-md shadow-xl mt-auto mb-auto ml-auto mr-auto flex flex-col justify-around">
         <p className="w-max p-2 text-2xl font-semibold ml-auto mr-auto">
           Log In
@@ -22,6 +24,10 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <Notification
+        isError={false}
+        message={"This is a sample message here!"}
+      />
     </div>
   );
 };
