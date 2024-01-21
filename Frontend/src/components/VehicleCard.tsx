@@ -60,8 +60,8 @@ const VehicleCard = ({ vehicle, citiesList }: Props) => {
   console.log(vehicle);
 
   return (
-    <div className="bg-blue-100 shadow-md hover:shadow-xl p-1 w-4/6 mt-8 ml-auto mr-auto">
-      <div className="border-b border-gray-200 w-6/6 h-8 ml-auto mr-auto flex flex-row">
+    <div className="bg-gradient-to-b from-blue-100 to-blue-200 shadow-md hover:shadow-xl p-1 w-4/6 mt-8 ml-auto mr-auto">
+      <div className="border-b border-gray-300 w-6/6 h-8 ml-auto mr-auto flex flex-row">
         {ownerDetails && (
           <div className="w-1/3 h-max mt-auto mb-auto text-center">
             <strong>Name :</strong> {ownerDetails.firstName}{" "}
@@ -82,7 +82,7 @@ const VehicleCard = ({ vehicle, citiesList }: Props) => {
           </div>
         )}
       </div>
-      <div className="border-b border-gray-200 w-6/6 h-8 mt-1 ml-auto mr-auto flex flex-row">
+      <div className="border-b border-gray-300 w-6/6 h-8 mt-1 ml-auto mr-auto flex flex-row">
         {vehicle && (
           <div className=" w-1/3 h-max mt-auto mb-auto text-center">
             <strong>Make :</strong> {vehicle.make}

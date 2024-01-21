@@ -52,7 +52,7 @@ const Login = () => {
 
       setTimeout(() => {
         navigate("/home");
-      }, 2500);
+      }, 1500);
     } else {
       setMessage(json.message);
       setIsError(true);

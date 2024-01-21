@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import VehicleCard from "../components/VehicleCard";
+import Notification from "../components/Notification";
 
 const MainHub = () => {
   const [category, setCategory] = useState("car");
@@ -55,7 +56,8 @@ const MainHub = () => {
     }
 
     if (!cityName) {
-      alert("cannot search without a valid cityName!");
+      console.error("cannot search without a valid cityName!");
+      return;
     }
 
     let fetchUrl = "http://localhost:8080/vehicle/filter";
