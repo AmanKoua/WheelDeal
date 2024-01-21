@@ -4,8 +4,10 @@ const Footer = () => {
   return (
     <div className="bg bg-gradient-to-b from-gray-200 via-gray-100 to bg-gray-100 w-full h-40 flex flex-row justify-around">
       <div className=" w-2/6 flex flex-col justify-around">
-        <p className="w-max h-max text-3xl ml-auto mr-auto p-2">Wheel Deal</p>
-        <p className="w-full h-max text-xl text-center ml-auto mr-auto p-2 font-extralight">
+        <p className="w-max h-max text-3xl ml-auto mr-auto p-2 pt-5">
+          Wheel Deal
+        </p>
+        <p className="w-full h-max text-xl text-center ml-auto mr-auto p-2 pb-5 font-extralight">
           The best vehicle trading platform on the web!
         </p>
       </div>
