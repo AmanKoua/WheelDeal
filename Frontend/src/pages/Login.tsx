@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Notification from "../components/Notification";
 
@@ -7,6 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!message) {
@@ -47,6 +49,10 @@ const Login = () => {
       setMessage(json.message);
       setIsError(false);
       localStorage.setItem("token", json.token);
+
+      setTimeout(() => {
+        navigate("/home");
+      }, 2500);
     } else {
       setMessage(json.message);
       setIsError(true);
