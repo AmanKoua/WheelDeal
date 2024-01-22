@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   vehicle: Object;
@@ -7,6 +8,8 @@ interface Props {
 }
 
 const VehicleCard = ({ vehicle, citiesList, setVehicleInfo }: Props) => {
+  const navigate = useNavigate();
+
   const [ownerDetails, setOwnerDetails] = useState<Object | undefined>(
     undefined
   );
@@ -65,6 +68,9 @@ const VehicleCard = ({ vehicle, citiesList, setVehicleInfo }: Props) => {
       className="bg-gradient-to-b from-blue-100 to-blue-200 shadow-md hover:shadow-xl p-1 w-4/6 mt-8 ml-auto mr-auto"
       onClick={() => {
         setVehicleInfo({ vehicle, ownerDetails, cityName: cityName });
+        setTimeout(() => {
+          navigate("/offer");
+        }, 100);
       }}
     >
       <div className="border-b border-gray-300 w-6/6 h-8 ml-auto mr-auto flex flex-row">

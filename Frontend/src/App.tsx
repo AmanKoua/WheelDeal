@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import MainHub from "./pages/MainHub";
 import RegisterVehicle from "./pages/RegisterVehicle";
+import Offer from "./pages/Offer";
 
 function App() {
   const [vehicleInfo, setVehicleInfo] = useState<undefined | Object>({});
@@ -16,7 +17,6 @@ function App() {
     if (vehicleInfo == undefined) {
       return;
     }
-
     console.log(vehicleInfo);
   }, [vehicleInfo]);
 
@@ -34,6 +34,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/registerVehicle" element={<RegisterVehicle />} />
+            <Route
+              path="/offer"
+              element={<Offer vehicleInfo={vehicleInfo} />}
+            />
           </Routes>
         </BrowserRouter>
         <Footer />

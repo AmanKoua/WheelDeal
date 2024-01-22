@@ -9,7 +9,7 @@ interface Props {
 }
 
 const MainHub = ({ setVehicleInfo }: Props) => {
-  const [category, setCategory] = useState("car");
+  const [category, setCategory] = useState("");
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");

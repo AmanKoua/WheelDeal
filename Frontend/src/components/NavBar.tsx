@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Link, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
@@ -50,6 +48,7 @@ const NavBar = () => {
             className="text-blue-100 border border-gray-300 h-3/4 mt-auto mb-auto pl-2 pr-2 rounded-sm shadow-md hover:shadow-lg flex"
             onClick={() => {
               localStorage.removeItem("token");
+              localStorage.removeItem("email");
               navigate("/login");
             }}
           >

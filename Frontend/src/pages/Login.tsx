@@ -49,7 +49,7 @@ const Login = () => {
       setMessage(json.message);
       setIsError(false);
       localStorage.setItem("token", json.token);
-
+      localStorage.setItem("email", email);
       setTimeout(() => {
         navigate("/home");
       }, 1500);
