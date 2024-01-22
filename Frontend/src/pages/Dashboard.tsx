@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import UserVehicleCard from "../components/UserVehicleCard";
 
-const Dashboard = () => {
+interface Props {
+  setSpecificVehicle: (val: Object | undefined) => void;
+}
+
+const Dashboard = ({ setSpecificVehicle }: Props) => {
   const [userVehicles, setUserVehicles] = useState([]);
   const [userTransactionInfo, setUserTransactionInfo] = useState<
     Object | undefined
@@ -32,7 +36,7 @@ const Dashboard = () => {
 
       if (response.ok) {
         setUserVehicles(json);
-        // console.log(json);
+        console.log(json);
       }
     };
 
@@ -59,7 +63,7 @@ const Dashboard = () => {
 
       if (response.ok) {
         setUserTransactionInfo(json);
-        console.log(json);
+        // console.log(json);
       }
     };
 
@@ -68,13 +72,27 @@ const Dashboard = () => {
   }, [userVehicles]);
 
   const generateUserVehicleCards = () => {
-    if (userVehicles.length == 0) {
+    if (userVehicles.length == 0 || !userTransactionInfo) {
       return <></>;
     } else {
       return (
         <>
           {userVehicles.map((item, idx) => (
-            <UserVehicleCard vehicleInfo={item} key={idx} />
+            <>
+              <UserVehicleCard
+                vehicleInfo={item}
+                setSpecificVehicle={setSpecificVehicle}
+                key={idx}
+              />
+              <div className="bg-gradient-to-b from-blue-100 to-blue-200 shadow-md p-1 w-4/6 mt-2 ml-auto mr-auto flex flex-row justify-around">
+                <div className="w-2/6 ">
+                  Incomming : {userTransactionInfo[0].Incomming[`${item.id}`]}
+                </div>
+                <div className="w-2/6 ">
+                  Outgoing : {userTransactionInfo[1].outgoing[`${item.id}`]}
+                </div>
+              </div>
+            </>
           ))}
         </>
       );
