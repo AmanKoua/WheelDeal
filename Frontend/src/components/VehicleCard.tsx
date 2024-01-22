@@ -68,6 +68,14 @@ const VehicleCard = ({ vehicle, citiesList, setVehicleInfo }: Props) => {
       className="bg-gradient-to-b from-blue-100 to-blue-200 shadow-md hover:shadow-xl p-1 w-4/6 mt-8 ml-auto mr-auto"
       onClick={() => {
         setVehicleInfo({ vehicle, ownerDetails, cityName: cityName });
+
+        if (
+          ownerDetails.email == localStorage.getItem("email") &&
+          localStorage.getItem("email")
+        ) {
+          return;
+        }
+
         setTimeout(() => {
           navigate("/offer");
         }, 100);

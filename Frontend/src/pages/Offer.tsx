@@ -94,7 +94,7 @@ const Offer = ({ vehicleInfo }: Props) => {
 
       if (response.ok) {
         setUserVehicles(json);
-        console.log(json);
+        // console.log(json);
       }
     };
 
@@ -128,7 +128,7 @@ const Offer = ({ vehicleInfo }: Props) => {
 
     try {
       json = await response.json();
-      console.log(json);
+      //   console.log(json);
     } catch (e) {
       console.error(e);
       return;
@@ -182,7 +182,13 @@ const Offer = ({ vehicleInfo }: Props) => {
             className="h-3/4 mt-auto mb-auto pl-1 rounded-md"
             value={userMoneyOffer}
             onChange={(e) => {
-              setUserMoneyOffer(parseInt(e.target.value));
+              let val = parseInt(e.target.value);
+
+              if (isNaN(val)) {
+                val = 0;
+              }
+
+              setUserMoneyOffer(val);
             }}
           />
         </div>
