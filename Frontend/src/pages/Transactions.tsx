@@ -8,9 +8,20 @@ interface Props {
 }
 
 const Transactions = ({ specificVehicle }: Props) => {
+  const [vehicleDataMap, setVehicleDataMap] = useState<Map<Number, Object>>(
+    new Map()
+  );
   const [incommingOffers, setIncommingOffers] = useState([]);
   const [outgoingOffers, setOutgoingOffers] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (vehicleDataMap.size == 0) {
+      return;
+    }
+
+    // console.log("---", vehicleDataMap);
+  }, [vehicleDataMap]);
 
   useEffect(() => {
     if (!specificVehicle) {
@@ -73,7 +84,7 @@ const Transactions = ({ specificVehicle }: Props) => {
 
       if (response.ok) {
         setOutgoingOffers(json);
-        console.log(json);
+        // console.log(json);
       } else {
         return;
       }
@@ -83,6 +94,45 @@ const Transactions = ({ specificVehicle }: Props) => {
     getOutgoingTransactions();
   }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("Cannot fetch vehicle data without token!");
+      return;
+    }
+
+    const getVehicleData = async (id: number) => {
+      const response = await fetch(`http://localhost:8080/vehicle/?id=${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      let json;
+
+      try {
+        json = await response.json();
+        // console.log(json);
+        vehicleDataMap.set(id, json[0]);
+      } catch (e) {
+        console.error(e);
+        return;
+      }
+    };
+
+    for (let i = 0; i < incommingOffers.length; i++) {
+      getVehicleData(incommingOffers[i].swapperVehicleId);
+      getVehicleData(incommingOffers[i].ownerVehicleId);
+    }
+
+    for (let i = 0; i < outgoingOffers.length; i++) {
+      getVehicleData(outgoingOffers[i].swapperVehicleId);
+      getVehicleData(outgoingOffers[i].ownerVehicleId);
+    }
+  }, [incommingOffers, outgoingOffers]);
+
   const generateIncommingTransactionCards = () => {
     return <>{}</>;
   };
@@ -91,8 +141,57 @@ const Transactions = ({ specificVehicle }: Props) => {
     return (
       <>
         {outgoingOffers.map((item, idx) => (
-          <div className="bg-red-200 w-4/6 h-20 mt-8 ml-auto mr-auto rounded-sm">
-            aadga
+          <div className="bg-gradient-to-b from-blue-100 to-blue-200 shadow-md hover:shadow-xl p-1 w-4/6 mt-2 ml-auto mr-auto">
+            <div className="border-b border-gray-300 w-6/6 h-8 mt-1 ml-auto mr-auto flex flex-row">
+              <div className=" w-1/2 h-max mt-auto mb-auto text-center">
+                <strong>Owner :</strong> {item.ownerEmail}
+              </div>
+              <div className=" w-1/2 h-max mt-auto mb-auto text-center">
+                <strong>Swapper :</strong> {item.swapperEmail}
+              </div>
+            </div>
+            <div className="border-b border-gray-300 w-6/6 h-8 mt-1 ml-auto mr-auto flex flex-row">
+              <div className=" w-1/2 h-max mt-auto mb-auto text-center">
+                <strong>Owner Agreement :</strong>{" "}
+                {item.doesOwnerAgree.toString()}
+              </div>
+              <div className="w-1/2 h-max mt-auto mb-auto text-center">
+                <strong>Swapper Agreement :</strong>{" "}
+                {item.doesSwapperAgree.toString()}
+              </div>
+            </div>
+            <div className="border-b border-gray-300 w-6/6 h-8 mt-1 ml-auto mr-auto flex flex-row">
+              <div className=" w-1/2 h-max mt-auto mb-auto text-center">
+                <strong>Owner location :</strong> {item.ownerLocationOffer}
+              </div>
+              <div className=" w-1/2 h-max mt-auto mb-auto text-center">
+                <strong>Owner price :</strong> $
+                {item.ownerPriceOffer.toLocaleString()}
+              </div>
+            </div>
+            <div className="border-b border-gray-300 w-6/6 h-8 mt-1 ml-auto mr-auto flex flex-row">
+              <div className=" w-1/2 h-max mt-auto mb-auto text-center">
+                <strong>Swapper location :</strong> {item.swapperLocationOffer}
+              </div>
+              <div className=" w-1/2 h-max mt-auto mb-auto text-center">
+                <strong>Owner offer :</strong> $
+                {item.swapperPriceOffer.toLocaleString()}
+              </div>
+            </div>
+            {vehicleDataMap.get(item.ownerVehicleId) && (
+              <div className="border-b border-gray-300 w-6/6 h-8 mt-1 ml-auto mr-auto flex flex-row">
+                <div className=" w-1/2 h-max mt-auto mb-auto text-center">
+                  <strong>Vehicle : </strong>
+                  {vehicleDataMap.get(item.ownerVehicleId).year}{" "}
+                  {vehicleDataMap.get(item.ownerVehicleId).make}{" "}
+                  {vehicleDataMap.get(item.ownerVehicleId).model}
+                </div>
+                <div className=" w-1/2 h-max mt-auto mb-auto text-center">
+                  <strong>Condition :</strong>{" "}
+                  {vehicleDataMap.get(item.ownerVehicleId).condition}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </>
