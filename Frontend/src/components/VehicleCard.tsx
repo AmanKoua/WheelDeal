@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 interface Props {
   vehicle: Object;
   citiesList: Object[];
+  setVehicleInfo: (val: Object) => void;
 }
 
-const VehicleCard = ({ vehicle, citiesList }: Props) => {
+const VehicleCard = ({ vehicle, citiesList, setVehicleInfo }: Props) => {
   const [ownerDetails, setOwnerDetails] = useState<Object | undefined>(
     undefined
   );
@@ -57,10 +58,15 @@ const VehicleCard = ({ vehicle, citiesList }: Props) => {
     return priceNum.toLocaleString();
   };
 
-  console.log(vehicle);
+  // console.log(vehicle);
 
   return (
-    <div className="bg-gradient-to-b from-blue-100 to-blue-200 shadow-md hover:shadow-xl p-1 w-4/6 mt-8 ml-auto mr-auto">
+    <div
+      className="bg-gradient-to-b from-blue-100 to-blue-200 shadow-md hover:shadow-xl p-1 w-4/6 mt-8 ml-auto mr-auto"
+      onClick={() => {
+        setVehicleInfo({ vehicle, ownerDetails, cityName: cityName });
+      }}
+    >
       <div className="border-b border-gray-300 w-6/6 h-8 ml-auto mr-auto flex flex-row">
         {ownerDetails && (
           <div className="w-1/3 h-max mt-auto mb-auto text-center">

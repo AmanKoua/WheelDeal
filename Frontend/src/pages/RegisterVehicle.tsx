@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import Notification from "../components/Notification";
+import "../invisibleScrollbar.css";
 
 const RegisterVehicle = () => {
   const [category, setCategory] = useState("car");
@@ -73,7 +74,10 @@ const RegisterVehicle = () => {
   };
 
   return (
-    <div className="flex flex-col h-max pb-10">
+    <div
+      className="flex flex-col pb-10 overflow-y-scroll hide-scrollbar"
+      style={{ height: "100vh" }}
+    >
       <h3 className="w-max p-2 ml-auto mr-auto mt-10 text-3xl font-semibold">
         Register Vehicle
       </h3>

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import NavBar from "./components/NavBar";
@@ -9,14 +10,27 @@ import MainHub from "./pages/MainHub";
 import RegisterVehicle from "./pages/RegisterVehicle";
 
 function App() {
+  const [vehicleInfo, setVehicleInfo] = useState<undefined | Object>({});
+
+  useEffect(() => {
+    if (vehicleInfo == undefined) {
+      return;
+    }
+
+    console.log(vehicleInfo);
+  }, [vehicleInfo]);
+
   return (
     <>
-      <div className="">
+      <div className="flex flex-col">
         <BrowserRouter>
           <NavBar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/home" element={<MainHub />} />
+            <Route
+              path="/home"
+              element={<MainHub setVehicleInfo={setVehicleInfo} />}
+            />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/registerVehicle" element={<RegisterVehicle />} />

@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import VehicleCard from "../components/VehicleCard";
 import Notification from "../components/Notification";
 
-const MainHub = () => {
+import "../invisibleScrollbar.css";
+
+interface Props {
+  setVehicleInfo: (val: Object) => void;
+}
+
+const MainHub = ({ setVehicleInfo }: Props) => {
   const [category, setCategory] = useState("car");
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
@@ -128,14 +134,22 @@ const MainHub = () => {
     return (
       <>
         {vehicles.map((item, idx) => (
-          <VehicleCard key={idx} vehicle={item} citiesList={citiesList} />
+          <VehicleCard
+            key={idx}
+            vehicle={item}
+            citiesList={citiesList}
+            setVehicleInfo={setVehicleInfo}
+          />
         ))}
       </>
     );
   };
 
   return (
-    <div className="flex flex-col" style={{ height: "100vh" }}>
+    <div
+      className="flex flex-col overflow-y-scroll hide-scrollbar"
+      style={{ height: "100vh" }}
+    >
       <div className="w-max h-max ml-auto mr-auto mt-4 border-b-2 font-semibold text-xl text-center">
         Find the right vehicle, just for you, using the filters below!
       </div>
