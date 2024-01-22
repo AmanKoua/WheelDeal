@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import MainHub from "./pages/MainHub";
 import RegisterVehicle from "./pages/RegisterVehicle";
 import Offer from "./pages/Offer";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const [vehicleInfo, setVehicleInfo] = useState<undefined | Object>({});
@@ -38,6 +39,7 @@ function App() {
               path="/offer"
               element={<Offer vehicleInfo={vehicleInfo} />}
             />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </BrowserRouter>
         <Footer />
