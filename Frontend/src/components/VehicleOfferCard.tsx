@@ -17,7 +17,7 @@ const VehicleOfferCard = ({ vehicleInfo }: Props) => {
           </div>
         )}
         <div className=" w-1/3 h-max mt-auto mb-auto text-center">
-          <strong>City :</strong> {"cityName"}
+          <strong>City :</strong> {vehicleInfo.cityName}
         </div>
         {vehicleInfo.ownerDetails && (
           <div className="w-1/3 h-max mt-auto mb-auto text-center">
