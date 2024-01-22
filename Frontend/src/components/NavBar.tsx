@@ -42,7 +42,7 @@ const NavBar = () => {
             </p>
           </div>
           <div className="text-blue-100 border border-gray-300 h-3/4 mt-auto mb-auto pl-2 pr-2 rounded-sm shadow-md hover:shadow-lg flex">
-            <p className="w-max h-max mt-auto mb-auto">View Profile</p>
+            <p className="w-max h-max mt-auto mb-auto">Dashboard</p>
           </div>
           <div
             className="text-blue-100 border border-gray-300 h-3/4 mt-auto mb-auto pl-2 pr-2 rounded-sm shadow-md hover:shadow-lg flex"

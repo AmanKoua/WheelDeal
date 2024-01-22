@@ -64,12 +64,12 @@ public class InitConfiguration {
 
             User user2 = new User();
             user2.firstName = "Susan";
-            user2.lastName = "Hicks";
+            user2.lastName = "Peters";
             user2.age = 64;
             user2.gender = "F";
             user2.cityId = city2.id;
             user2.phoneNumber = "1234567890";
-            user2.email = "akoua1@umich.edu";
+            user2.email = "susanpeters@gmail.com";
             user2.password = authService.hashPassword("password");
             user2.dealCount = 0;
             user2.avgRating = 0f;
@@ -93,12 +93,12 @@ public class InitConfiguration {
             vehicle2.isAvailable = true;
             vehicle2.ownerEmail = user1.email;
             vehicle2.category = "car";
-            vehicle2.make = "Pegany";
+            vehicle2.make = "Pagani";
             vehicle2.model = "Hydra";
             vehicle2.year = 2014;
             vehicle2.color = "Neon green";
             vehicle2.cityId = user1.cityId;
-            vehicle2.defaultPrice = 890000.00d;
+            vehicle2.defaultPrice = 12500000.00d;
             vehicle2.condition = 5;
 
             Vehicle vehicle3 = new Vehicle();
@@ -122,7 +122,7 @@ public class InitConfiguration {
             vehicle4.year = 1998;
             vehicle4.color = "Black";
             vehicle4.cityId = user2.cityId;
-            vehicle4.defaultPrice = 520000d;
+            vehicle4.defaultPrice = 85750d;
             vehicle4.condition = 4;
 
             vehicleRepository.saveAll(List.of(vehicle1, vehicle2, vehicle3, vehicle4));

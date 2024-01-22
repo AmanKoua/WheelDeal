@@ -40,7 +40,7 @@ public class VehicleController {
         if(!request.isValid()){
             request.printAllFields();
             message = "Request body has invalid / missing field(s)!";
-            return ResponseEntity.ok(new Message(message));
+            return ResponseEntity.badRequest().body(new Message(message));
         }
 
         if(authentication != null && authentication.isAuthenticated()){
