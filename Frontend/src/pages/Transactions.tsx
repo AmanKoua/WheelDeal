@@ -350,14 +350,14 @@ const Transactions = ({ specificVehicle }: Props) => {
               >
                 Accept Transaction
               </div>
-              <div
+              {/* <div
                 className="bg-red-200 border-red-300 border-2 rounded-md w-1/3 h-full mt-auto mb-auto text-center"
                 onClick={() => {
                   handleTransaction(item.id, false);
                 }}
               >
                 Reject Transaction
-              </div>
+              </div> */}
             </div>
           </div>
         ))}
