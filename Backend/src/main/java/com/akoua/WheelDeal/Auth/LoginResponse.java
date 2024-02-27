@@ -1,6 +1,7 @@
 package com.akoua.WheelDeal.Auth;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor

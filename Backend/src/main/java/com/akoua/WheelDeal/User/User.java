@@ -3,6 +3,7 @@ package com.akoua.WheelDeal.User;
 import com.akoua.WheelDeal.Auth.SignupRequestBody;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
